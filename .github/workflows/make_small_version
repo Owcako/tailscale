@@ -1,0 +1,21 @@
+name: Build Tailscale (Small)
+
+on:
+  push:
+    branches: [ main ]  # Change "main" to your main branch name if different
+
+jobs:
+  build:
+    runs-on: windows-latest  # Replace with desired runner OS (e.g., ubuntu-latest, macos-latest)
+    steps:
+      - uses: actions/checkout@v3  # Checkout your code from the repository
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'  # Adjust Go version as needed (check Tailscale build requirements)
+      - name: Build Combined Tailscale
+        run: |
+          go build -o tailscale.combined -tags ts_include_cli ./cmd/tailscaled
+      - name: Build Smaller Tailscale (Optional)
+        run: |
+          ./build_dist.sh --extra-small  # This step builds a smaller binary with --extra-small flag (optional)
